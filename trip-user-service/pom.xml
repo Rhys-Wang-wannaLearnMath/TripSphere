@@ -14,26 +14,33 @@
 	<artifactId>user</artifactId>
 	<version>0.1.0</version>
 	<name>trip-user-service</name>
-	<description>trip-user-service</description>
+
+	<properties>
+		<java.version>21</java.version>
+		<protobuf.version>4.33.5</protobuf.version>
+		<grpc.version>1.78.0</grpc.version>
+		<spring-cloud.version>2023.0.3</spring-cloud.version>
+		<spring-cloud-alibaba.version>2023.0.3.2</spring-cloud-alibaba.version>
+	</properties>
 
 	<dependencyManagement>
 		<dependencies>
 			<dependency>
-				<groupId>org.springframework.ai</groupId>
-				<artifactId>spring-ai-bom</artifactId>
-				<version>1.1.0</version>
+				<groupId>org.springframework.cloud</groupId>
+				<artifactId>spring-cloud-dependencies</artifactId>
+				<version>${spring-cloud.version}</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+			<dependency>
+				<groupId>com.alibaba.cloud</groupId>
+				<artifactId>spring-cloud-alibaba-dependencies</artifactId>
+				<version>${spring-cloud-alibaba.version}</version>
 				<type>pom</type>
 				<scope>import</scope>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
-
-	<properties>
-		<java.version>21</java.version>
-		<protobuf.version>3.23.4</protobuf.version>
-		<protobuf-plugin.version>0.6.1</protobuf-plugin.version>
-		<grpc.version>1.58.0</grpc.version>
-	</properties>
 
 	<dependencies>
 		<dependency>
@@ -54,8 +61,12 @@
 			<artifactId>spring-boot-starter-security</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>mysql</groupId>
-			<artifactId>mysql-connector-java</artifactId>
+			<groupId>com.alibaba.cloud</groupId>
+			<artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.mysql</groupId>
+			<artifactId>mysql-connector-j</artifactId>
 			<version>8.0.33</version>
 		</dependency>
 		<dependency>
@@ -102,20 +113,10 @@
 			<!-- Select version according to actual situation -->
 			<version>2.15.2</version>
 		</dependency>
-		<!-- UUID7 library -->
-		<dependency>
-			<groupId>com.github.f4b6a3</groupId>
-			<artifactId>uuid-creator</artifactId>
-			<version>5.3.7</version>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.ai</groupId>
-			<artifactId>spring-ai-starter-mcp-server-webmvc</artifactId>
-		</dependency>
 		<!-- gRPC dependencies -->
 		<dependency>
 			<groupId>io.grpc</groupId>
-			<artifactId>grpc-stub</artifactId>
+			<artifactId>grpc-core</artifactId>
 			<version>${grpc.version}</version>
 		</dependency>
 		<dependency>
@@ -124,15 +125,20 @@
 			<version>${grpc.version}</version>
 		</dependency>
 		<dependency>
+			<groupId>io.grpc</groupId>
+			<artifactId>grpc-stub</artifactId>
+			<version>${grpc.version}</version>
+		</dependency>
+		<dependency>
 			<groupId>com.google.protobuf</groupId>
 			<artifactId>protobuf-java</artifactId>
 			<version>${protobuf.version}</version>
 		</dependency>
-		<!-- Nacos -->
+		<!-- UUID7 library -->
 		<dependency>
-			<groupId>com.alibaba.cloud</groupId>
-			<artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
-			<version>2023.0.3.2</version>
+			<groupId>com.github.f4b6a3</groupId>
+			<artifactId>uuid-creator</artifactId>
+			<version>5.3.7</version>
 		</dependency>
 	</dependencies>
 
@@ -157,35 +163,13 @@
 				</executions>
 			</plugin>
 			<plugin>
-				<groupId>org.xolstice.maven.plugins</groupId>
-				<artifactId>protobuf-maven-plugin</artifactId>
-				<version>${protobuf-plugin.version}</version>
-				<configuration>
-					<pluginId>grpc-java</pluginId>
-					<protocArtifact>
-						com.google.protobuf:protoc:${protobuf.version}:exe:${os.detected.classifier}
-					</protocArtifact>
-					<pluginArtifact>
-						io.grpc:protoc-gen-grpc-java:${grpc.version}:exe:${os.detected.classifier}
-					</pluginArtifact>
-				</configuration>
-				<executions>
-					<execution>
-						<goals>
-							<goal>compile</goal>
-							<goal>compile-custom</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
-			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>build-helper-maven-plugin</artifactId>
 				<version>3.3.0</version>
 				<executions>
 					<execution>
 						<id>add-sources</id>
-						<phase>generate-sources</phase>
+						<phase>initialize</phase>
 						<goals>
 							<goal>add-source</goal>
 						</goals>

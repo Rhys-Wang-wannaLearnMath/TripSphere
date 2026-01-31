@@ -9,20 +9,21 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.tripsphere.user.ChangePasswordRequest;
-import org.tripsphere.user.ChangePasswordResponse;
-import org.tripsphere.user.GetCurrentUserRequest;
-import org.tripsphere.user.GetCurrentUserResponse;
-import org.tripsphere.user.LoginRequest;
-import org.tripsphere.user.LoginResponse;
-import org.tripsphere.user.RegisterRequest;
-import org.tripsphere.user.RegisterResponse;
-import org.tripsphere.user.User;
 import org.tripsphere.user.grpc.JwtAuthenticationToken;
 import org.tripsphere.user.model.Role;
 import org.tripsphere.user.model.UserEntity;
 import org.tripsphere.user.repository.UserRepository;
 import org.tripsphere.user.util.JwtUtil;
+import org.tripsphere.user.v1.ChangePasswordRequest;
+import org.tripsphere.user.v1.ChangePasswordResponse;
+import org.tripsphere.user.v1.GetCurrentUserRequest;
+import org.tripsphere.user.v1.GetCurrentUserResponse;
+import org.tripsphere.user.v1.LoginRequest;
+import org.tripsphere.user.v1.LoginResponse;
+import org.tripsphere.user.v1.RegisterRequest;
+import org.tripsphere.user.v1.RegisterResponse;
+import org.tripsphere.user.v1.User;
+import org.tripsphere.user.v1.UserServiceGrpc.UserServiceImplBase;
 
 import io.grpc.Status;
 import io.grpc.stub.StreamObserver;
@@ -33,10 +34,10 @@ import net.devh.boot.grpc.server.service.GrpcService;
 @Service
 @GrpcService
 @Slf4j
-public class UserServiceImpl extends org.tripsphere.user.UserServiceGrpc.UserServiceImplBase {
+public class UserServiceImpl extends UserServiceImplBase {
 
     // Username pattern: allows letters, numbers, and underscores
-    private static final Pattern USERNAME_PATTERN = Pattern.compile("^[a-zA-Z0-9_]+$");
+    private static final Pattern USERNAME_PATTERN = Pattern.compile("^\\w+$");
 
     // Password pattern: at least 6 characters, only letters and numbers
     private static final Pattern PASSWORD_PATTERN = Pattern.compile("^[a-zA-Z0-9]{6,}$");
