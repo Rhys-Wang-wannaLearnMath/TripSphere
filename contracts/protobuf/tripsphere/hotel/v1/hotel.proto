@@ -68,9 +68,7 @@ message DeleteHotelRequest {
   string id = 1; //hotel id
 }
 
-message DeleteHotelResponse {
-  bool success = 1;
-}
+message DeleteHotelResponse {}
 
 message ChangeHotelRequest {
   Hotel hotel = 1; // must include id

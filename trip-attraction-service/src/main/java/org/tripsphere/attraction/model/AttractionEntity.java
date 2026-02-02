@@ -21,7 +21,7 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 @Data
 @Document("attractions")
-@JsonInclude(JsonInclude.Include.ALWAYS)
+@JsonInclude()
 public class AttractionEntity implements Serializable {
     @Id private String id;
     private String name;

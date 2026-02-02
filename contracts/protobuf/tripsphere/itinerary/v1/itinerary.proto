@@ -165,9 +165,7 @@ message DeleteItineraryRequest {
   string itinerary_id = 1;
 }
 
-message DeleteItineraryResponse {
-  bool success = 1;
-}
+message DeleteItineraryResponse {}
 
 // ListUserItineraries
 message ListUserItinerariesRequest {

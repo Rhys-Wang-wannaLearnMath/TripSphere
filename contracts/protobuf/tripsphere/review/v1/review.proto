@@ -57,9 +57,7 @@ message DeleteReviewRequest {
   string id = 1;
 }
 
-message DeleteReviewResponse {
-  bool status = 1;
-}
+message DeleteReviewResponse {}
 
 message GetReviewByTargetIDRequest {
   string target_type = 1;

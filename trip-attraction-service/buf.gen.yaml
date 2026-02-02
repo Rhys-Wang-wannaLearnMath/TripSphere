@@ -4,6 +4,7 @@ managed:
   override:
     - file_option: java_package_prefix
       value: org
+clean: true
 plugins:
   - remote: buf.build/protocolbuffers/java:v33.5
     out: target/generated-sources/protobuf/java
