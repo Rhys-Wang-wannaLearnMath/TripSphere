@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package tripsphere.hotel.v1;
 
-import "tripsphere/common/v1/geo.proto";
+import "tripsphere/common/v1/map.proto";
 
 option go_package = "tripsphere/hotel/v1";
 option java_multiple_files = true;
@@ -41,7 +41,7 @@ message Hotel {
   string introduction = 4;
   repeated string tags = 5;
   repeated Room rooms = 6;
-  tripsphere.common.v1.Location location = 7;
+  tripsphere.common.v1.GeoPoint location = 7;
 }
 
 message FindHotelByIdRequest {
@@ -59,7 +59,7 @@ message DeleteHotelRequest {
 message DeleteHotelResponse {}
 
 message FindHotelWithinRadiusRequest {
-  tripsphere.common.v1.Location location = 1;
+  tripsphere.common.v1.GeoPoint location = 1;
   double radius_km = 2;
   string name = 3;
   repeated string tags = 4;
@@ -70,7 +70,7 @@ message FindHotelWithinRadiusResponse {
 }
 
 message FindHotelsWithinCircleRequest {
-  tripsphere.common.v1.Location location = 1;
+  tripsphere.common.v1.GeoPoint location = 1;
   double radius_km = 2;
   string name = 3;
   repeated string tags = 4;

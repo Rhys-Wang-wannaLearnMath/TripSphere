@@ -3,7 +3,7 @@ syntax = "proto3";
 package tripsphere.itinerary.v1;
 
 import "google/protobuf/struct.proto";
-import "tripsphere/common/v1/geo.proto";
+import "tripsphere/common/v1/map.proto";
 
 option go_package = "tripsphere/itinerary/v1";
 option java_multiple_files = true;
@@ -35,7 +35,7 @@ service ItineraryService {
 
 message ActivityLocation {
   string name = 1;
-  tripsphere.common.v1.Location location = 2;
+  tripsphere.common.v1.GeoPoint location = 2;
   string address = 3;
 }
 

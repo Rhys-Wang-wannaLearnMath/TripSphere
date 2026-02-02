@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package tripsphere.attraction.v1;
 
-import "tripsphere/common/v1/geo.proto";
+import "tripsphere/common/v1/map.proto";
 
 option go_package = "tripsphere/attraction/v1";
 option java_multiple_files = true;
@@ -26,7 +26,7 @@ message Attraction {
   string introduction = 4;
   repeated string tags = 5;
   repeated string images = 6;
-  tripsphere.common.v1.Location location = 7;
+  tripsphere.common.v1.GeoPoint location = 7;
 }
 
 message AddAttractionRequest {
@@ -60,7 +60,7 @@ message FindAttractionByIdResponse {
 }
 
 message FindAttractionsLocationNearRequest {
-  tripsphere.common.v1.Location location = 1;
+  tripsphere.common.v1.GeoPoint location = 1;
   double radius_km = 2;
   repeated string tags = 3;
 }

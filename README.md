@@ -21,11 +21,11 @@ export OPENAI_BASE_URL=https://api.openai.com/v1
 
 ### Protobuf and gRPC Codes
 
-Protobuf and gRPC codes are useful to ensure projects can be compiled in development, and provide hints for IDEs. We use Buf to generate protobuf and gRPC codes. Run `task gen-proto` to generate protobuf and gRPC codes with Buf CLI.
+Protobuf and gRPC codes are useful to ensure projects can be compiled, and provide hints for IDEs. We use Buf to generate protobuf and gRPC codes. Run `task gen-proto` to generate protobuf and gRPC codes with Buf CLI.
 
 ### Development Environment
 
-For development environment, you can use Docker Compose to start the system. Run `task start` to run the services, agents, databases, and middlewares.
+For development environment, you can use Docker Compose to start the system. Run `task start` to run the services, agents, databases, and middlewares. If you are building docker images from source code, make sure the protobuf and gRPC codes are generated beforehand.
 
 ## Deployment
 
