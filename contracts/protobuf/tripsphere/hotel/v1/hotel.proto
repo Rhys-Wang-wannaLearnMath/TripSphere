@@ -9,19 +9,9 @@ option java_multiple_files = true;
 option java_package = "org.tripsphere.hotel.v1";
 
 service HotelService {
-  rpc AddHotel(AddHotelRequest) returns (AddHotelResponse);
+  rpc FindHotelById(FindHotelByIdRequest) returns (FindHotelByIdResponse);
 
   rpc DeleteHotel(DeleteHotelRequest) returns (DeleteHotelResponse);
-
-  rpc ChangeHotel(ChangeHotelRequest) returns (ChangeHotelResponse);
-
-  //Find hotels located at the specified location and within the specified distance range
-  //and list them in order from near to far, and result has been paginated
-  rpc FindHotelWithinRadiusPage(FindHotelWithinRadiusPageRequest) returns (FindHotelWithinRadiusPageResponse);
-
-  //Find hotels located at the specified location and within the specified distance range
-  //and result has been paginated
-  rpc FindHotelsWithinCirclePage(FindHotelsWithinCirclePageRequest) returns (FindHotelsWithinCirclePageResponse);
 
   //Find hotels located at the specified location and within the specified distance range
   //and list them in order from near to far
@@ -29,8 +19,6 @@ service HotelService {
 
   //Find hotels located at the specified location and within the specified distance range
   rpc FindHotelsWithinCircle(FindHotelsWithinCircleRequest) returns (FindHotelsWithinCircleResponse);
-
-  rpc FindHotelById(FindHotelByIdRequest) returns (FindHotelByIdResponse);
 }
 
 message Room {
@@ -64,19 +52,19 @@ message AddHotelResponse {
   string id = 1; //hotel id
 }
 
+message FindHotelByIdRequest {
+  string id = 1;
+}
+
+message FindHotelByIdResponse {
+  Hotel hotel = 1;
+}
+
 message DeleteHotelRequest {
   string id = 1; //hotel id
 }
 
 message DeleteHotelResponse {}
-
-message ChangeHotelRequest {
-  Hotel hotel = 1; // must include id
-}
-
-message ChangeHotelResponse {
-  bool success = 1;
-}
 
 message HotelPage {
   repeated Hotel content = 1; // content of page
@@ -87,32 +75,6 @@ message HotelPage {
   bool first = 6; // if this page is first page
   bool last = 7; // if this page is last page
   int32 number_of_elements = 8; // the actual number of hotel on this page
-}
-
-message FindHotelWithinRadiusPageRequest {
-  tripsphere.common.v1.Location location = 1;
-  double radius_km = 2;
-  int32 number = 3; // page number
-  int32 size = 4; // page size
-  string name = 5;
-  repeated string tags = 6;
-}
-
-message FindHotelWithinRadiusPageResponse {
-  HotelPage hotel_page = 1;
-}
-
-message FindHotelsWithinCirclePageRequest {
-  tripsphere.common.v1.Location location = 1;
-  double radius_km = 2;
-  int32 number = 3; // page number
-  int32 size = 4; // page size
-  string name = 5;
-  repeated string tags = 6;
-}
-
-message FindHotelsWithinCirclePageResponse {
-  HotelPage hotel_page = 1;
 }
 
 message FindHotelWithinRadiusRequest {
@@ -135,12 +97,4 @@ message FindHotelsWithinCircleRequest {
 
 message FindHotelsWithinCircleResponse {
   repeated Hotel content = 1;
-}
-
-message FindHotelByIdRequest {
-  string id = 1;
-}
-
-message FindHotelByIdResponse {
-  Hotel hotel = 1;
 }

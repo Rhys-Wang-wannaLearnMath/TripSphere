@@ -26,10 +26,13 @@ EOF
 RUN --mount=type=cache,target=/root/.m2 \
     ./mvnw -B dependency:go-offline $([ -n "$MAVEN_MIRROR_URL" ] && echo "-s /tmp/settings.xml")
 
+# Copy source code
 COPY src ./src
+# Copy pre-generated protobuf and gRPC codes
+COPY target/generated-sources ./target/generated-sources
 
 RUN --mount=type=cache,target=/root/.m2 \
-    ./mvnw -B clean package -DskipTests $([ -n "$MAVEN_MIRROR_URL" ] && echo "-s /tmp/settings.xml")
+    ./mvnw -B package -DskipTests $([ -n "$MAVEN_MIRROR_URL" ] && echo "-s /tmp/settings.xml")
 
 
 FROM eclipse-temurin:21-jre
