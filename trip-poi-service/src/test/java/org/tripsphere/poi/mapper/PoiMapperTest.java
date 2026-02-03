@@ -51,7 +51,7 @@ class PoiMapperTest {
                         .build();
 
         // When: Convert to Domain Poi
-        Poi domain = mapper.protoToPoi(proto);
+        Poi domain = mapper.toModel(proto);
 
         // Then: Verify all fields
         assertNotNull(domain);
@@ -90,7 +90,7 @@ class PoiMapperTest {
                 org.tripsphere.poi.v1.Poi.newBuilder().setId("poi_456").setName("测试POI").build();
 
         // When: Convert
-        Poi domain = mapper.protoToPoi(proto);
+        Poi domain = mapper.toModel(proto);
 
         // Then: Verify
         assertNotNull(domain);
@@ -116,7 +116,7 @@ class PoiMapperTest {
                         .build();
 
         // When: Convert
-        Poi domain = mapper.protoToPoi(proto);
+        Poi domain = mapper.toModel(proto);
 
         // Then: Verify images
         assertNotNull(domain);
@@ -145,7 +145,7 @@ class PoiMapperTest {
                         .build();
 
         // When: Convert to Proto
-        org.tripsphere.poi.v1.Poi proto = mapper.poiToProto(domain);
+        org.tripsphere.poi.v1.Poi proto = mapper.toProto(domain);
 
         // Then: Verify all fields
         assertNotNull(proto);
@@ -184,7 +184,7 @@ class PoiMapperTest {
         Poi domain = Poi.builder().id("poi_min").name("最小POI").build();
 
         // When: Convert
-        org.tripsphere.poi.v1.Poi proto = mapper.poiToProto(domain);
+        org.tripsphere.poi.v1.Poi proto = mapper.toProto(domain);
 
         // Then: Verify
         assertNotNull(proto);
@@ -211,7 +211,7 @@ class PoiMapperTest {
                         .build();
 
         // When: Convert
-        org.tripsphere.poi.v1.Poi proto = mapper.poiToProto(domain);
+        org.tripsphere.poi.v1.Poi proto = mapper.toProto(domain);
 
         // Then: Verify
         assertNotNull(proto);
@@ -238,7 +238,7 @@ class PoiMapperTest {
                         .build();
 
         // When: Convert to PoiDoc
-        PoiDoc doc = mapper.poiToPoiDoc(domain);
+        PoiDoc doc = mapper.toDoc(domain);
 
         // Then: Verify all fields
         assertNotNull(doc);
@@ -279,7 +279,7 @@ class PoiMapperTest {
                         .build();
 
         // When: Convert
-        PoiDoc doc = mapper.poiToPoiDoc(domain);
+        PoiDoc doc = mapper.toDoc(domain);
 
         // Then: Verify
         assertNotNull(doc);
@@ -307,7 +307,7 @@ class PoiMapperTest {
                         .build();
 
         // When: Convert to Domain Poi
-        Poi domain = mapper.poiDocToPoi(doc);
+        Poi domain = mapper.toModel(doc);
 
         // Then: Verify all fields
         assertNotNull(domain);
@@ -342,7 +342,7 @@ class PoiMapperTest {
         PoiDoc doc = PoiDoc.builder().id("doc_no_loc").name("无坐标文档").adcode("310000").build();
 
         // When: Convert
-        Poi domain = mapper.poiDocToPoi(doc);
+        Poi domain = mapper.toModel(doc);
 
         // Then: Verify
         assertNotNull(domain);
@@ -358,10 +358,10 @@ class PoiMapperTest {
         Poi.GeoPoint originalGcj02 = new Poi.GeoPoint(GCJ02_LNG, GCJ02_LAT);
 
         // When: GCJ02 -> WGS84
-        GeoJsonPoint wgs84 = mapper.geoPointToGeoJsonPoint(originalGcj02);
+        GeoJsonPoint wgs84 = mapper.toGeoJsonPoint(originalGcj02);
 
         // Then: WGS84 -> GCJ02
-        Poi.GeoPoint resultGcj02 = mapper.geoJsonPointToGeoPoint(wgs84);
+        Poi.GeoPoint resultGcj02 = mapper.toGeoPoint(wgs84);
 
         // Verify round-trip transformation maintains consistency (with small tolerance)
         assertNotNull(resultGcj02);
@@ -374,10 +374,10 @@ class PoiMapperTest {
     @DisplayName("Coordinate transformation: should handle null values correctly")
     void coordinateTransformationWithNull() {
         // GeoPoint to GeoJsonPoint
-        assertNull(mapper.geoPointToGeoJsonPoint(null));
+        assertNull(mapper.toGeoJsonPoint(null));
 
         // GeoJsonPoint to GeoPoint
-        assertNull(mapper.geoJsonPointToGeoPoint(null));
+        assertNull(mapper.toGeoPoint(null));
     }
 
     @Test
@@ -406,10 +406,10 @@ class PoiMapperTest {
                         .build();
 
         // When: Proto -> Domain -> PoiDoc -> Domain -> Proto
-        Poi domain1 = mapper.protoToPoi(originalProto);
-        PoiDoc doc = mapper.poiToPoiDoc(domain1);
-        Poi domain2 = mapper.poiDocToPoi(doc);
-        org.tripsphere.poi.v1.Poi finalProto = mapper.poiToProto(domain2);
+        Poi domain1 = mapper.toModel(originalProto);
+        PoiDoc doc = mapper.toDoc(domain1);
+        Poi domain2 = mapper.toModel(doc);
+        org.tripsphere.poi.v1.Poi finalProto = mapper.toProto(domain2);
 
         // Then: Verify key fields remain consistent
         assertEquals(originalProto.getId(), finalProto.getId());

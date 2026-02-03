@@ -1,7 +1,6 @@
 package org.tripsphere.attraction.api.grpc;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.tripsphere.attraction.domain.model.Attraction;
 import org.tripsphere.attraction.domain.service.AttractionService;
@@ -50,8 +49,7 @@ public class AttractionGrpcService extends AttractionServiceImplBase {
             return;
         }
 
-        org.tripsphere.attraction.v1.Attraction attractionProto =
-                mapper.attractionToProto(attraction);
+        org.tripsphere.attraction.v1.Attraction attractionProto = mapper.toProto(attraction);
 
         FindAttractionByIdResponse response =
                 FindAttractionByIdResponse.newBuilder().setAttraction(attractionProto).build();
@@ -74,10 +72,7 @@ public class AttractionGrpcService extends AttractionServiceImplBase {
 
         FindAttractionsLocationNearResponse response =
                 FindAttractionsLocationNearResponse.newBuilder()
-                        .addAllAttractions(
-                                attractions.stream()
-                                        .map(mapper::attractionToProto)
-                                        .collect(Collectors.toList()))
+                        .addAllAttractions(mapper.toProtoList(attractions))
                         .build();
 
         responseObserver.onNext(response);

@@ -51,7 +51,7 @@ class AttractionMapperTest {
                         .build();
 
         // When: Convert to Domain Attraction
-        Attraction domain = mapper.protoToAttraction(proto);
+        Attraction domain = mapper.toModel(proto);
 
         // Then: Verify all fields
         assertNotNull(domain);
@@ -96,7 +96,7 @@ class AttractionMapperTest {
                         .build();
 
         // When: Convert
-        Attraction domain = mapper.protoToAttraction(proto);
+        Attraction domain = mapper.toModel(proto);
 
         // Then: Verify
         assertNotNull(domain);
@@ -143,7 +143,7 @@ class AttractionMapperTest {
                         .build();
 
         // When: Convert
-        Attraction domain = mapper.protoToAttraction(proto);
+        Attraction domain = mapper.toModel(proto);
 
         // Then: Verify
         assertNotNull(domain);
@@ -171,7 +171,7 @@ class AttractionMapperTest {
                         .build();
 
         // When: Convert to Proto
-        org.tripsphere.attraction.v1.Attraction proto = mapper.attractionToProto(domain);
+        org.tripsphere.attraction.v1.Attraction proto = mapper.toProto(domain);
 
         // Then: Verify all fields
         assertNotNull(proto);
@@ -211,7 +211,7 @@ class AttractionMapperTest {
         Attraction domain = Attraction.builder().id("attraction_min").name("最小景点").build();
 
         // When: Convert
-        org.tripsphere.attraction.v1.Attraction proto = mapper.attractionToProto(domain);
+        org.tripsphere.attraction.v1.Attraction proto = mapper.toProto(domain);
 
         // Then: Verify
         assertNotNull(proto);
@@ -238,7 +238,7 @@ class AttractionMapperTest {
                         .build();
 
         // When: Convert
-        org.tripsphere.attraction.v1.Attraction proto = mapper.attractionToProto(domain);
+        org.tripsphere.attraction.v1.Attraction proto = mapper.toProto(domain);
 
         // Then: Verify
         assertNotNull(proto);
@@ -267,7 +267,7 @@ class AttractionMapperTest {
                         .build();
 
         // When: Convert to AttractionDoc
-        AttractionDoc doc = mapper.attractionToAttractionDoc(domain);
+        AttractionDoc doc = mapper.toDoc(domain);
 
         // Then: Verify all fields
         assertNotNull(doc);
@@ -308,7 +308,7 @@ class AttractionMapperTest {
                         .build();
 
         // When: Convert
-        AttractionDoc doc = mapper.attractionToAttractionDoc(domain);
+        AttractionDoc doc = mapper.toDoc(domain);
 
         // Then: Verify
         assertNotNull(doc);
@@ -330,7 +330,7 @@ class AttractionMapperTest {
                         .build();
 
         // When: Convert
-        AttractionDoc doc = mapper.attractionToAttractionDoc(domain);
+        AttractionDoc doc = mapper.toDoc(domain);
 
         // Then: Verify
         assertNotNull(doc);
@@ -359,7 +359,7 @@ class AttractionMapperTest {
                         .build();
 
         // When: Convert to Domain Attraction
-        Attraction domain = mapper.attractionDocToAttraction(doc);
+        Attraction domain = mapper.toModel(doc);
 
         // Then: Verify all fields
         assertNotNull(domain);
@@ -394,7 +394,7 @@ class AttractionMapperTest {
                 AttractionDoc.builder().id("doc_no_loc").name("无坐标文档").introduction("测试").build();
 
         // When: Convert
-        Attraction domain = mapper.attractionDocToAttraction(doc);
+        Attraction domain = mapper.toModel(doc);
 
         // Then: Verify
         assertNotNull(domain);
@@ -411,7 +411,7 @@ class AttractionMapperTest {
                 AttractionDoc.builder().id("doc_minimal").name("最小文档").isDeleted(false).build();
 
         // When: Convert
-        Attraction domain = mapper.attractionDocToAttraction(doc);
+        Attraction domain = mapper.toModel(doc);
 
         // Then: Verify
         assertNotNull(domain);
@@ -431,10 +431,10 @@ class AttractionMapperTest {
         Attraction.GeoPoint originalGcj02 = new Attraction.GeoPoint(GCJ02_LNG, GCJ02_LAT);
 
         // When: GCJ02 -> WGS84
-        GeoJsonPoint wgs84 = mapper.geoPointToGeoJsonPoint(originalGcj02);
+        GeoJsonPoint wgs84 = mapper.toGeoJsonPoint(originalGcj02);
 
         // Then: WGS84 -> GCJ02
-        Attraction.GeoPoint resultGcj02 = mapper.geoJsonPointToGeoPoint(wgs84);
+        Attraction.GeoPoint resultGcj02 = mapper.toGeoPoint(wgs84);
 
         // Verify round-trip transformation maintains consistency (with small tolerance)
         assertNotNull(resultGcj02);
@@ -447,10 +447,10 @@ class AttractionMapperTest {
     @DisplayName("Coordinate transformation: should handle null values correctly")
     void coordinateTransformationWithNull() {
         // GeoPoint to GeoJsonPoint
-        assertNull(mapper.geoPointToGeoJsonPoint(null));
+        assertNull(mapper.toGeoJsonPoint(null));
 
         // GeoJsonPoint to GeoPoint
-        assertNull(mapper.geoJsonPointToGeoPoint(null));
+        assertNull(mapper.toGeoPoint(null));
     }
 
     @Test
@@ -466,8 +466,8 @@ class AttractionMapperTest {
 
         for (double[] coords : testCoordinates) {
             Attraction.GeoPoint gcj02 = new Attraction.GeoPoint(coords[0], coords[1]);
-            GeoJsonPoint wgs84 = mapper.geoPointToGeoJsonPoint(gcj02);
-            Attraction.GeoPoint backToGcj02 = mapper.geoJsonPointToGeoPoint(wgs84);
+            GeoJsonPoint wgs84 = mapper.toGeoJsonPoint(gcj02);
+            Attraction.GeoPoint backToGcj02 = mapper.toGeoPoint(wgs84);
 
             assertNotNull(backToGcj02);
             assertEquals(coords[0], backToGcj02.getLongitude(), COORDINATE_TOLERANCE);
@@ -501,10 +501,10 @@ class AttractionMapperTest {
                         .build();
 
         // When: Proto -> Domain -> AttractionDoc -> Domain -> Proto
-        Attraction domain1 = mapper.protoToAttraction(originalProto);
-        AttractionDoc doc = mapper.attractionToAttractionDoc(domain1);
-        Attraction domain2 = mapper.attractionDocToAttraction(doc);
-        org.tripsphere.attraction.v1.Attraction finalProto = mapper.attractionToProto(domain2);
+        Attraction domain1 = mapper.toModel(originalProto);
+        AttractionDoc doc = mapper.toDoc(domain1);
+        Attraction domain2 = mapper.toModel(doc);
+        org.tripsphere.attraction.v1.Attraction finalProto = mapper.toProto(domain2);
 
         // Then: Verify key fields remain consistent
         assertEquals(originalProto.getId(), finalProto.getId());
@@ -563,10 +563,10 @@ class AttractionMapperTest {
                         .build();
 
         // When: Complete transformation cycle
-        Attraction domain1 = mapper.protoToAttraction(originalProto);
-        AttractionDoc doc = mapper.attractionToAttractionDoc(domain1);
-        Attraction domain2 = mapper.attractionDocToAttraction(doc);
-        org.tripsphere.attraction.v1.Attraction finalProto = mapper.attractionToProto(domain2);
+        Attraction domain1 = mapper.toModel(originalProto);
+        AttractionDoc doc = mapper.toDoc(domain1);
+        Attraction domain2 = mapper.toModel(doc);
+        org.tripsphere.attraction.v1.Attraction finalProto = mapper.toProto(domain2);
 
         // Then: Verify all fields are preserved
         assertEquals(originalProto.getId(), finalProto.getId());
@@ -602,8 +602,8 @@ class AttractionMapperTest {
                         .build();
 
         // When: Convert through all transformations
-        Attraction domain = mapper.protoToAttraction(proto);
-        org.tripsphere.attraction.v1.Attraction backToProto = mapper.attractionToProto(domain);
+        Attraction domain = mapper.toModel(proto);
+        org.tripsphere.attraction.v1.Attraction backToProto = mapper.toProto(domain);
 
         // Then: Special characters should be preserved
         assertEquals(proto.getName(), backToProto.getName());

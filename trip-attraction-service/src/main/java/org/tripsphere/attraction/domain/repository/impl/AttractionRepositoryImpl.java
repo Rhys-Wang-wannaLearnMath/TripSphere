@@ -2,7 +2,6 @@ package org.tripsphere.attraction.domain.repository.impl;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Repository;
 import org.tripsphere.attraction.domain.model.Attraction;
@@ -24,7 +23,7 @@ public class AttractionRepositoryImpl implements AttractionRepository {
     @Override
     public Attraction findById(String id) {
         Optional<AttractionDoc> doc = mongoAttractionRepository.findById(id);
-        return doc.map(mapper::attractionDocToAttraction).orElse(null);
+        return doc.map(mapper::toModel).orElse(null);
     }
 
     @Override
@@ -47,12 +46,12 @@ public class AttractionRepositoryImpl implements AttractionRepository {
                             wgs84Coords[0], wgs84Coords[1], maxDistanceMeters, tags);
         }
 
-        return docs.stream().map(mapper::attractionDocToAttraction).collect(Collectors.toList());
+        return mapper.toModelList(docs);
     }
 
     @Override
     public void save(Attraction attraction) {
-        AttractionDoc doc = mapper.attractionToAttractionDoc(attraction);
+        AttractionDoc doc = mapper.toDoc(attraction);
         mongoAttractionRepository.save(doc);
     }
 

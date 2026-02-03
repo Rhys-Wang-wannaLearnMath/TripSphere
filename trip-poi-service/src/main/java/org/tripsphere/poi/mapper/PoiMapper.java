@@ -18,34 +18,34 @@ public interface PoiMapper {
     // Proto <--> Domain Model
     // ===================================================================
 
-    Poi protoToPoi(org.tripsphere.poi.v1.Poi proto);
+    Poi toModel(org.tripsphere.poi.v1.Poi proto);
 
-    org.tripsphere.poi.v1.Poi poiToProto(Poi poi);
+    org.tripsphere.poi.v1.Poi toProto(Poi poi);
 
     // ===================================================================
     // Domain Model <--> Persistence Document
     // ===================================================================
 
-    @Mapping(target = "location", source = "location", qualifiedByName = "geoPointToGeoJsonPoint")
-    PoiDoc poiToPoiDoc(Poi poi);
+    @Mapping(target = "location", source = "location", qualifiedByName = "toGeoJsonPoint")
+    PoiDoc toDoc(Poi poi);
 
-    @Mapping(target = "location", source = "location", qualifiedByName = "geoJsonPointToGeoPoint")
-    Poi poiDocToPoi(PoiDoc poiDoc);
+    @Mapping(target = "location", source = "location", qualifiedByName = "toGeoPoint")
+    Poi toModel(PoiDoc poiDoc);
 
     // ===================================================================
     // Domain GeoPoint (GCJ02) <--> GeoJsonPoint (WGS84)
     // ===================================================================
 
-    @Named("geoPointToGeoJsonPoint")
-    default GeoJsonPoint geoPointToGeoJsonPoint(Poi.GeoPoint point) {
+    @Named("toGeoJsonPoint")
+    default GeoJsonPoint toGeoJsonPoint(Poi.GeoPoint point) {
         if (point == null) return null;
         double[] coordinate =
                 CoordinateTransformUtil.gcj02ToWgs84(point.getLongitude(), point.getLatitude());
         return new GeoJsonPoint(coordinate[0], coordinate[1]);
     }
 
-    @Named("geoJsonPointToGeoPoint")
-    default Poi.GeoPoint geoJsonPointToGeoPoint(GeoJsonPoint geoJsonPoint) {
+    @Named("toGeoPoint")
+    default Poi.GeoPoint toGeoPoint(GeoJsonPoint geoJsonPoint) {
         if (geoJsonPoint == null) return null;
         double[] coordinate =
                 CoordinateTransformUtil.wgs84ToGcj02(geoJsonPoint.getX(), geoJsonPoint.getY());
