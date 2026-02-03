@@ -34,24 +34,20 @@ public class AttractionRepositoryImpl implements AttractionRepository {
         double[] wgs84Coords = CoordinateTransformUtil.gcj02ToWgs84(longitude, latitude);
         double maxDistanceMeters = radiusKm * 1000; // MongoDB expects meters for $nearSphere
 
-        List<AttractionDoc> docs =
-                mongoAttractionRepository.findByLocationNear(
-                        wgs84Coords[0], wgs84Coords[1], maxDistanceMeters);
+        List<AttractionDoc> docs;
+        if (tags == null || tags.isEmpty()) {
+            // Query without tag filtering
+            docs =
+                    mongoAttractionRepository.findByLocationNear(
+                            wgs84Coords[0], wgs84Coords[1], maxDistanceMeters);
+        } else {
+            // Query with tag filtering at MongoDB level
+            docs =
+                    mongoAttractionRepository.findByLocationNearAndTagsIn(
+                            wgs84Coords[0], wgs84Coords[1], maxDistanceMeters, tags);
+        }
 
-        return docs.stream()
-                .map(mapper::attractionDocToAttraction)
-                .filter(
-                        attraction -> {
-                            // Filter by tags if provided
-                            if (tags == null || tags.isEmpty()) {
-                                return true;
-                            }
-                            if (attraction.getTags() == null) {
-                                return false;
-                            }
-                            return attraction.getTags().stream().anyMatch(tags::contains);
-                        })
-                .collect(Collectors.toList());
+        return docs.stream().map(mapper::attractionDocToAttraction).collect(Collectors.toList());
     }
 
     @Override

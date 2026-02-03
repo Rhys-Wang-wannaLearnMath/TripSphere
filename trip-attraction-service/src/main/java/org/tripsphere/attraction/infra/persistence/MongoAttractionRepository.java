@@ -20,4 +20,20 @@ public interface MongoAttractionRepository extends MongoRepository<AttractionDoc
             """)
     List<AttractionDoc> findByLocationNear(
             double longitude, double latitude, double maxDistanceMeters);
+
+    @Query(
+            """
+            {
+              'location': {
+                $nearSphere: {
+                  $geometry: { type: 'Point', coordinates: [?0, ?1] },
+                  $maxDistance: ?2
+                }
+              },
+              'tags': { $in: ?3 },
+              'isDeleted': false
+            }
+            """)
+    List<AttractionDoc> findByLocationNearAndTagsIn(
+            double longitude, double latitude, double maxDistanceMeters, List<String> tags);
 }

@@ -13,8 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Service
 @Slf4j
-public class HotelServiceImpl
-        implements HotelService {
+public class HotelServiceImpl implements HotelService {
     private static final DateTimeFormatter DATE_TIME_FORMATTER =
             DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
     private static final DateTimeFormatter DATE_FORMATTER =
@@ -53,7 +52,7 @@ public class HotelServiceImpl
      */
     public List<HotelDoc> findHotelsWithinRadius(
             double longitude, double latitude, double radiusKm, String name, List<String> tags) {
-        double maxDistanceMeters = radiusKm * 1000;  // Mongo expects meters for $nearSphere
+        double maxDistanceMeters = radiusKm * 1000; // Mongo expects meters for $nearSphere
         String nameRegex = (name == null || name.isBlank()) ? ".*" : ".*" + name + ".*";
         return hotelRepository.findByLocationNearWithFilters(
                 longitude, latitude, maxDistanceMeters);
