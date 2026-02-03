@@ -56,7 +56,9 @@ tasks:
   format:
     desc: Format Java code using spotless
     cmds:
-      - cmd: mvnw spotless:apply
+      - cmd: .\\mvnw spotless:apply
         platforms: [windows]
+      - cmd: chmod +x mvnw
+        platforms: [linux, darwin]
       - cmd: ./mvnw spotless:apply
         platforms: [linux, darwin]

@@ -1,17 +1,11 @@
-package org.tripsphere.attraction.repository;
+package org.tripsphere.attraction.infra.persistence;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
-import org.springframework.stereotype.Repository;
-import org.tripsphere.attraction.model.AttractionDoc;
 
-@Repository
-public interface AttractionRepository extends MongoRepository<AttractionDoc, String> {
-    public Optional<AttractionDoc> findById(String id);
-
+public interface MongoAttractionRepository extends MongoRepository<AttractionDoc, String> {
     @Query(
             """
             {
@@ -20,7 +14,8 @@ public interface AttractionRepository extends MongoRepository<AttractionDoc, Str
                   $geometry: { type: 'Point', coordinates: [?0, ?1] },
                   $maxDistance: ?2
                 }
-              }
+              },
+              'isDeleted': false
             }
             """)
     List<AttractionDoc> findByLocationNear(
