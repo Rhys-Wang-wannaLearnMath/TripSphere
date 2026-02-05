@@ -1,0 +1,14 @@
+spring:
+  application:
+    name: trip-poi-service
+  cloud:
+    nacos:
+      server-addr: localhost:8848
+
+server:
+  port: 24218
+
+grpc:
+  server:
+    port: 50058
+    address: 0.0.0.0
