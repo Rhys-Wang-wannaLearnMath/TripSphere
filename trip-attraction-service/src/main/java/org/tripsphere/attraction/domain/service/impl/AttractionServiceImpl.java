@@ -1,13 +1,11 @@
 package org.tripsphere.attraction.domain.service.impl;
 
 import java.util.List;
-
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.tripsphere.attraction.domain.model.Attraction;
 import org.tripsphere.attraction.domain.repository.AttractionRepository;
 import org.tripsphere.attraction.domain.service.AttractionService;
-
-import lombok.extern.slf4j.Slf4j;
 
 @Service
 @Slf4j

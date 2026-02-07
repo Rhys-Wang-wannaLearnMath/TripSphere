@@ -1,5 +1,7 @@
 package org.tripsphere.poi.util;
 
+import org.tripsphere.poi.domain.model.Poi.GeoPoint;
+
 public class CoordinateTransformUtil {
     private static final double PI = 3.1415926535897932384626;
     private static final double A = 6378245.0;
@@ -28,6 +30,10 @@ public class CoordinateTransformUtil {
         double dLng = gcp[0] - lng;
         double dLat = gcp[1] - lat;
         return new double[] {lng - dLng, lat - dLat};
+    }
+
+    public static double[] gcj02ToWgs84(GeoPoint point) {
+        return gcj02ToWgs84(point.getLongitude(), point.getLatitude());
     }
 
     public static double transformLat(double lng, double lat) {

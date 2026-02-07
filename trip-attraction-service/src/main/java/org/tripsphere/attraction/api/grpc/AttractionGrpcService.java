@@ -1,33 +1,32 @@
 package org.tripsphere.attraction.api.grpc;
 
+import io.grpc.stub.StreamObserver;
 import java.util.List;
-
+import lombok.RequiredArgsConstructor;
+import net.devh.boot.grpc.server.service.GrpcService;
 import org.tripsphere.attraction.domain.model.Attraction;
 import org.tripsphere.attraction.domain.service.AttractionService;
 import org.tripsphere.attraction.mapper.AttractionMapper;
-import org.tripsphere.attraction.v1.*;
 import org.tripsphere.attraction.v1.AttractionServiceGrpc.AttractionServiceImplBase;
-
-import io.grpc.stub.StreamObserver;
-
-import net.devh.boot.grpc.server.service.GrpcService;
+import org.tripsphere.attraction.v1.DeleteAttractionRequest;
+import org.tripsphere.attraction.v1.DeleteAttractionResponse;
+import org.tripsphere.attraction.v1.FindAttractionByIdRequest;
+import org.tripsphere.attraction.v1.FindAttractionByIdResponse;
+import org.tripsphere.attraction.v1.FindAttractionsLocationNearRequest;
+import org.tripsphere.attraction.v1.FindAttractionsLocationNearResponse;
 
 @GrpcService
+@RequiredArgsConstructor
 public class AttractionGrpcService extends AttractionServiceImplBase {
-
     private final AttractionService attractionService;
     private final AttractionMapper mapper = AttractionMapper.INSTANCE;
-
-    public AttractionGrpcService(AttractionService attractionService) {
-        this.attractionService = attractionService;
-    }
 
     @Override
     public void deleteAttraction(
             DeleteAttractionRequest request,
             StreamObserver<DeleteAttractionResponse> responseObserver) {
         String attractionId = request.getId();
-        boolean success = attractionService.deleteAttraction(attractionId);
+        attractionService.deleteAttraction(attractionId);
 
         DeleteAttractionResponse response = DeleteAttractionResponse.newBuilder().build();
 

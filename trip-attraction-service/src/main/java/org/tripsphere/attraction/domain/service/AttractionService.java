@@ -1,7 +1,6 @@
 package org.tripsphere.attraction.domain.service;
 
 import java.util.List;
-
 import org.tripsphere.attraction.domain.model.Attraction;
 
 public interface AttractionService {

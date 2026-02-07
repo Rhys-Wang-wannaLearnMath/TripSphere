@@ -1,7 +1,6 @@
 package org.tripsphere.attraction.mapper;
 
 import java.util.List;
-
 import org.mapstruct.*;
 import org.mapstruct.factory.Mappers;
 import org.springframework.data.mongodb.core.geo.GeoJsonPoint;

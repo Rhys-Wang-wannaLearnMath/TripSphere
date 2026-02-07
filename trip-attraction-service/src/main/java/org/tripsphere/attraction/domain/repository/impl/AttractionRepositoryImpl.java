@@ -2,7 +2,6 @@ package org.tripsphere.attraction.domain.repository.impl;
 
 import java.util.List;
 import java.util.Optional;
-
 import org.springframework.stereotype.Repository;
 import org.tripsphere.attraction.domain.model.Attraction;
 import org.tripsphere.attraction.domain.repository.AttractionRepository;

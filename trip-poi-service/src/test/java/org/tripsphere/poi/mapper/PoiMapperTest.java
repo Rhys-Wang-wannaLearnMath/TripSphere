@@ -5,7 +5,6 @@ import static org.junit.jupiter.api.Assertions.*;
 import java.time.Instant;
 import java.util.Arrays;
 import java.util.List;
-
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.data.mongodb.core.geo.GeoJsonPoint;
@@ -174,7 +173,7 @@ class PoiMapperTest {
         assertTrue(proto.getImagesList().contains("image1.jpg"));
         assertTrue(proto.getImagesList().contains("image2.jpg"));
 
-        // Proto does not contain timestamps, isDeleted fields
+        // Proto does not contain timestamps, deleted fields
     }
 
     @Test
@@ -263,7 +262,7 @@ class PoiMapperTest {
         assertEquals(2, doc.getCategories().size());
         assertEquals(2, doc.getImages().size());
 
-        // isDeleted should be ignored and use default value
+        // deleted should be ignored and use default value
         assertFalse(doc.isDeleted());
     }
 
@@ -303,7 +302,7 @@ class PoiMapperTest {
                         .images(List.of("photo1.jpg"))
                         .createdAt(Instant.now())
                         .updatedAt(Instant.now())
-                        .isDeleted(false)
+                        .deleted(false)
                         .build();
 
         // When: Convert to Domain Poi

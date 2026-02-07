@@ -87,7 +87,7 @@
 			<groupId>com.fasterxml.jackson.core</groupId>
 			<artifactId>jackson-annotations</artifactId>
 			<!-- Select version according to actual situation -->
-			<version>2.15.2</version>
+			<version>2.17.2</version>
 		</dependency>
 		<!-- gRPC dependencies -->
 		<dependency>
@@ -108,6 +108,11 @@
 		<dependency>
 			<groupId>com.google.protobuf</groupId>
 			<artifactId>protobuf-java</artifactId>
+			<version>${protobuf.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.google.protobuf</groupId>
+			<artifactId>protobuf-java-util</artifactId>
 			<version>${protobuf.version}</version>
 		</dependency>
 		<!-- UUID7 library -->
@@ -213,9 +218,7 @@
 							<reflowLongStrings>true</reflowLongStrings>
 						</googleJavaFormat>
 						<removeUnusedImports />
-						<importOrder>
-							<order>#static,java,javax,org,com,io</order>
-						</importOrder>
+						<importOrder />
 						<lineEndings>UNIX</lineEndings>
 						<trimTrailingWhitespace/>
 						<endWithNewline/>

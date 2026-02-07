@@ -15,5 +15,5 @@ enum Reason {
 // gRPC details structure
 message Details {
   Reason reason = 1;
-  string msg = 2;
+  string message = 2;
 }

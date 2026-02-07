@@ -1,7 +1,6 @@
 package org.tripsphere.attraction.infra.persistence;
 
 import java.util.List;
-
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
 
@@ -15,7 +14,7 @@ public interface MongoAttractionRepository extends MongoRepository<AttractionDoc
                   $maxDistance: ?2
                 }
               },
-              'isDeleted': false
+              'deleted': false
             }
             """)
     List<AttractionDoc> findByLocationNear(
@@ -31,7 +30,7 @@ public interface MongoAttractionRepository extends MongoRepository<AttractionDoc
                 }
               },
               'tags': { $in: ?3 },
-              'isDeleted': false
+              'deleted': false
             }
             """)
     List<AttractionDoc> findByLocationNearAndTagsIn(

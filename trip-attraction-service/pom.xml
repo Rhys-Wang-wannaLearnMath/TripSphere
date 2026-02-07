@@ -206,9 +206,7 @@
 							<reflowLongStrings>true</reflowLongStrings>
 						</googleJavaFormat>
 						<removeUnusedImports />
-						<importOrder>
-							<order>#static,java,javax,org,com,io</order>
-						</importOrder>
+						<importOrder />
 						<lineEndings>UNIX</lineEndings>
 						<trimTrailingWhitespace/>
 						<endWithNewline/>

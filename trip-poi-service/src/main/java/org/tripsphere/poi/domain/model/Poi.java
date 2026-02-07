@@ -2,7 +2,6 @@ package org.tripsphere.poi.domain.model;
 
 import java.time.Instant;
 import java.util.List;
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -15,7 +14,10 @@ import lombok.NoArgsConstructor;
 public class Poi {
     private String id;
     private String name;
-    private GeoPoint location; // GCJ02 coordinate system
+
+    /** GCJ02 coordinate system location */
+    private GeoPoint location;
+
     private Address address;
     private String adcode;
     private String amapId;

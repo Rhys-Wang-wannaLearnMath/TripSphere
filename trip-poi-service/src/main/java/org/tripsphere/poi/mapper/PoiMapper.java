@@ -1,5 +1,6 @@
 package org.tripsphere.poi.mapper;
 
+import java.util.List;
 import org.mapstruct.*;
 import org.mapstruct.factory.Mappers;
 import org.springframework.data.mongodb.core.geo.GeoJsonPoint;
@@ -22,6 +23,8 @@ public interface PoiMapper {
 
     org.tripsphere.poi.v1.Poi toProto(Poi poi);
 
+    Poi updateFromProto(org.tripsphere.poi.v1.Poi proto, @MappingTarget Poi poi);
+
     // ===================================================================
     // Domain Model <--> Persistence Document
     // ===================================================================
@@ -31,6 +34,12 @@ public interface PoiMapper {
 
     @Mapping(target = "location", source = "location", qualifiedByName = "toGeoPoint")
     Poi toModel(PoiDoc poiDoc);
+
+    // ===================================================================
+    // Collection Mappings
+    // ===================================================================
+
+    List<org.tripsphere.poi.v1.Poi> toProtoList(List<Poi> pois);
 
     // ===================================================================
     // Domain GeoPoint (GCJ02) <--> GeoJsonPoint (WGS84)

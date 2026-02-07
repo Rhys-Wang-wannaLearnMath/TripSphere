@@ -8,7 +8,6 @@ import java.time.Instant;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -50,7 +49,7 @@ class AttractionRepositoryImplTest {
                         .images(Arrays.asList("img1.jpg", "img2.jpg"))
                         .createdAt(Instant.now())
                         .updatedAt(Instant.now())
-                        .isDeleted(false)
+                        .deleted(false)
                         .build();
 
         testDoc2 =
@@ -64,7 +63,7 @@ class AttractionRepositoryImplTest {
                         .images(Arrays.asList("img3.jpg"))
                         .createdAt(Instant.now())
                         .updatedAt(Instant.now())
-                        .isDeleted(false)
+                        .deleted(false)
                         .build();
     }
 
