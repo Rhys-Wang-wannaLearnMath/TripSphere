@@ -6,7 +6,6 @@ import (
 	"time"
 	pd "trip-review-service/api/grpc/gen/tripsphere/review/v1"
 	"trip-review-service/internal/domain"
-	mq "trip-review-service/internal/handler/middleware"
 	"trip-review-service/internal/repository"
 
 	"github.com/google/uuid"
@@ -17,7 +16,6 @@ import (
 type ReviewService struct {
 	pd.UnimplementedReviewServiceServer
 	db domain.ReviewRepository
-	mq *mq.MQ
 }
 
 var reviewService *ReviewService
@@ -26,8 +24,8 @@ func GetReviewService() *ReviewService {
 	return reviewService
 }
 
-func NewReviewService(db domain.ReviewRepository, mq *mq.MQ) *ReviewService {
-	return &ReviewService{db: db, mq: mq}
+func NewReviewService(db domain.ReviewRepository) *ReviewService {
+	return &ReviewService{db: db}
 }
 
 func (r *ReviewService) CreateReview(ctx context.Context, request *pd.CreateReviewRequest) (*pd.CreateReviewResponse, error) {
@@ -45,8 +43,6 @@ func (r *ReviewService) CreateReview(ctx context.Context, request *pd.CreateRevi
 		log.Printf("failed to create %+v\n", review)
 		return &pd.CreateReviewResponse{Status: false, Id: ""}, status.Error(codes.Internal, "failed to create ")
 	}
-
-	r.mq.AddMessage("ReviewTopic", review.ToString(), "CreateReview")
 
 	return &pd.CreateReviewResponse{
 		Id:     id,
@@ -68,8 +64,6 @@ func (r *ReviewService) UpdateReview(ctx context.Context, request *pd.UpdateRevi
 		return &pd.UpdateReviewResponse{Status: false}, status.Error(codes.Internal, "failed to update ")
 	}
 
-	r.mq.AddMessage("ReviewTopic", review.ToString(), "UpdateReview")
-
 	return &pd.UpdateReviewResponse{Status: true}, nil
 
 }
@@ -80,8 +74,6 @@ func (r *ReviewService) DeleteReview(ctx context.Context, request *pd.DeleteRevi
 	if err != nil {
 		return &pd.DeleteReviewResponse{}, status.Error(codes.Internal, "failed to delete")
 	}
-
-	r.mq.AddMessage("ReviewTopic", id, "DeleteReview")
 
 	return &pd.DeleteReviewResponse{}, nil
 }
@@ -139,5 +131,5 @@ func (r *ReviewService) GetReviewByTargetIDWithCursor(ctx context.Context, reque
 }
 
 func init() {
-	reviewService = NewReviewService(repository.GetReviewRepo(), mq.GetMQ())
+	reviewService = NewReviewService(repository.GetReviewRepo())
 }

@@ -33,12 +33,6 @@ var (
 	MySQLMaxOpenConn     int
 	MySQLMaxIdleConn     int
 	MySQLConnMaxLifeTime time.Duration
-
-	// RocketMQ Configuration
-	RocketMQGroupName string
-	RocketMQEndpoint  string
-	RocketMQAccessKey string
-	RocketMQSecretKey string
 )
 
 func getEnv(key string, defaultValue string) string {
@@ -108,10 +102,4 @@ func Init() {
 	MySQLMaxOpenConn = getEnvAsInt("MYSQL_MAX_OPEN_CONN", 100)
 	MySQLMaxIdleConn = getEnvAsInt("MYSQL_MAX_IDLE_CONN", 10)
 	MySQLConnMaxLifeTime = getEnvAsDuration("MYSQL_CONN_MAX_LIFETIME", 1*time.Hour)
-
-	// RocketMQ Configuration
-	RocketMQGroupName = getEnv("ROCKETMQ_GROUP_NAME", "")
-	RocketMQEndpoint = getEnv("ROCKETMQ_ENDPOINT", "localhost:8081")
-	RocketMQAccessKey = getEnv("ROCKETMQ_ACCESS_KEY", "")
-	RocketMQSecretKey = getEnv("ROCKETMQ_SECRET_KEY", "")
 }
