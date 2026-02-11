@@ -1,80 +1,96 @@
 package org.tripsphere.attraction.api.grpc;
 
+import com.google.protobuf.FieldMask;
+import com.google.protobuf.util.FieldMaskUtil;
 import io.grpc.stub.StreamObserver;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import net.devh.boot.grpc.server.service.GrpcService;
-import org.tripsphere.attraction.domain.model.Attraction;
-import org.tripsphere.attraction.domain.service.AttractionService;
-import org.tripsphere.attraction.mapper.AttractionMapper;
+import org.tripsphere.attraction.exception.InvalidArgumentException;
+import org.tripsphere.attraction.exception.NotFoundException;
+import org.tripsphere.attraction.service.AttractionService;
+import org.tripsphere.attraction.v1.Attraction;
 import org.tripsphere.attraction.v1.AttractionServiceGrpc.AttractionServiceImplBase;
-import org.tripsphere.attraction.v1.DeleteAttractionRequest;
-import org.tripsphere.attraction.v1.DeleteAttractionResponse;
-import org.tripsphere.attraction.v1.FindAttractionByIdRequest;
-import org.tripsphere.attraction.v1.FindAttractionByIdResponse;
-import org.tripsphere.attraction.v1.FindAttractionsLocationNearRequest;
-import org.tripsphere.attraction.v1.FindAttractionsLocationNearResponse;
+import org.tripsphere.attraction.v1.BatchGetAttractionsRequest;
+import org.tripsphere.attraction.v1.BatchGetAttractionsResponse;
+import org.tripsphere.attraction.v1.GetAttractionByIdRequest;
+import org.tripsphere.attraction.v1.GetAttractionByIdResponse;
+import org.tripsphere.attraction.v1.GetAttractionsNearbyRequest;
+import org.tripsphere.attraction.v1.GetAttractionsNearbyResponse;
 
 @GrpcService
 @RequiredArgsConstructor
 public class AttractionGrpcService extends AttractionServiceImplBase {
+
     private final AttractionService attractionService;
-    private final AttractionMapper mapper = AttractionMapper.INSTANCE;
+
+    private static final double DEFAULT_RADIUS_METERS = 1000;
 
     @Override
-    public void deleteAttraction(
-            DeleteAttractionRequest request,
-            StreamObserver<DeleteAttractionResponse> responseObserver) {
-        String attractionId = request.getId();
-        attractionService.deleteAttraction(attractionId);
+    public void getAttractionById(
+            GetAttractionByIdRequest request,
+            StreamObserver<GetAttractionByIdResponse> responseObserver) {
+        String id = request.getId();
+        if (id.isEmpty()) {
+            throw InvalidArgumentException.required("id");
+        }
 
-        DeleteAttractionResponse response = DeleteAttractionResponse.newBuilder().build();
+        Attraction attraction =
+                attractionService
+                        .findById(id)
+                        .orElseThrow(() -> new NotFoundException("Attraction", id));
 
-        responseObserver.onNext(response);
+        responseObserver.onNext(
+                GetAttractionByIdResponse.newBuilder().setAttraction(attraction).build());
         responseObserver.onCompleted();
     }
 
     @Override
-    public void findAttractionById(
-            FindAttractionByIdRequest request,
-            StreamObserver<FindAttractionByIdResponse> responseObserver) {
-        Attraction attraction = attractionService.findAttractionById(request.getId());
-
-        if (attraction == null) {
-            responseObserver.onError(
-                    io.grpc.Status.NOT_FOUND
-                            .withDescription("Attraction not found with id: " + request.getId())
-                            .asRuntimeException());
+    public void batchGetAttractions(
+            BatchGetAttractionsRequest request,
+            StreamObserver<BatchGetAttractionsResponse> responseObserver) {
+        List<String> ids = request.getIdsList();
+        if (ids.isEmpty()) {
+            responseObserver.onNext(BatchGetAttractionsResponse.newBuilder().build());
+            responseObserver.onCompleted();
             return;
         }
 
-        org.tripsphere.attraction.v1.Attraction attractionProto = mapper.toProto(attraction);
+        List<Attraction> attractions = attractionService.findAllByIds(ids);
 
-        FindAttractionByIdResponse response =
-                FindAttractionByIdResponse.newBuilder().setAttraction(attractionProto).build();
+        // Apply field mask if specified
+        FieldMask fieldMask = request.getFieldMask();
+        if (request.hasFieldMask() && fieldMask.getPathsCount() > 0) {
+            attractions =
+                    attractions.stream()
+                            .map(attraction -> FieldMaskUtil.trim(fieldMask, attraction))
+                            .toList();
+        }
 
-        responseObserver.onNext(response);
+        responseObserver.onNext(
+                BatchGetAttractionsResponse.newBuilder().addAllAttractions(attractions).build());
         responseObserver.onCompleted();
     }
 
     @Override
-    public void findAttractionsLocationNear(
-            FindAttractionsLocationNearRequest request,
-            StreamObserver<FindAttractionsLocationNearResponse> responseObserver) {
-        double longitude = request.getLocation().getLongitude();
-        double latitude = request.getLocation().getLatitude();
-        double radiusKm = request.getRadiusKm();
+    public void getAttractionsNearby(
+            GetAttractionsNearbyRequest request,
+            StreamObserver<GetAttractionsNearbyResponse> responseObserver) {
+        if (!request.hasLocation()) {
+            throw InvalidArgumentException.required("location");
+        }
+
+        double radiusMeters =
+                request.getRadiusMeters() > 0 ? request.getRadiusMeters() : DEFAULT_RADIUS_METERS;
+
         List<String> tags = request.getTagsList();
 
         List<Attraction> attractions =
-                attractionService.findAttractionsLocationNear(longitude, latitude, radiusKm, tags);
+                attractionService.searchNearby(
+                        request.getLocation(), radiusMeters, tags.isEmpty() ? null : tags);
 
-        FindAttractionsLocationNearResponse response =
-                FindAttractionsLocationNearResponse.newBuilder()
-                        .addAllAttractions(mapper.toProtoList(attractions))
-                        .build();
-
-        responseObserver.onNext(response);
+        responseObserver.onNext(
+                GetAttractionsNearbyResponse.newBuilder().addAllAttractions(attractions).build());
         responseObserver.onCompleted();
     }
 }

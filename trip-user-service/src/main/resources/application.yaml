@@ -24,7 +24,7 @@ server:
 grpc:
   server:
     port: 50056
-    address: 0.0.0.0
+    enable-reflection: true
 
 jwt:
   secret: MySecretKeyForJWTTokenGenerationThatIsAtLeast256BitsLongForHS256Algorithm

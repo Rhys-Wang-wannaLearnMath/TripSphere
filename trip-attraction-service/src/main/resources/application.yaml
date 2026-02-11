@@ -15,4 +15,9 @@ server:
 grpc:
   server:
     port: 50053
-    address: 0.0.0.0
+    enable-reflection: true
+
+logging:
+  level:
+    org.tripsphere.attraction: DEBUG
+    net.devh.boot.grpc: INFO

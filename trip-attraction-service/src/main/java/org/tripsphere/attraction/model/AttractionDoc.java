@@ -1,4 +1,4 @@
-package org.tripsphere.attraction.infra.persistence;
+package org.tripsphere.attraction.model;
 
 import java.time.Instant;
 import java.util.List;
@@ -23,8 +23,9 @@ import org.springframework.data.mongodb.core.mapping.Document;
 public class AttractionDoc {
     @Id private String id;
     private String name;
+    @Indexed private String poiId;
 
-    // MongoDB uses WGS84 coordinate system
+    /** Location in WGS84 coordinate system */
     @GeoSpatialIndexed(type = GeoSpatialIndexType.GEO_2DSPHERE)
     private GeoJsonPoint location;
 
@@ -32,17 +33,9 @@ public class AttractionDoc {
     private String introduction;
     private List<String> tags;
     private List<String> images;
+    private OpeningHoursDoc openingHours;
+    private boolean temporarilyClosed;
+    private TicketInfoDoc ticketInfo;
     @CreatedDate private Instant createdAt;
     @LastModifiedDate private Instant updatedAt;
-    @Builder.Default private boolean deleted = false;
-
-    @Data
-    @AllArgsConstructor
-    @NoArgsConstructor
-    public static class AddressDoc {
-        private String province;
-        @Indexed private String city;
-        private String district;
-        private String detailed;
-    }
 }
