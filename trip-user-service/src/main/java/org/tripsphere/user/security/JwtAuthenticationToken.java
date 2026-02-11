@@ -1,4 +1,4 @@
-package org.tripsphere.user.api.grpc.security;
+package org.tripsphere.user.security;
 
 import java.util.List;
 import java.util.stream.Collectors;

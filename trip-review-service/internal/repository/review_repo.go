@@ -132,7 +132,7 @@ func (r *ReviewRepo) Update(ctx context.Context, review *domain.Review) error {
 
 	result := r.db.WithContext(ctx).
 		Model(&model.ReviewModel{}).
-		Where("id = ? ", review.ID). // For safety, include uid to verify ownership
+		Where("id = ? ", review.ID). // For safety, include user_id to verify ownership
 		Updates(updates)
 
 	if result.Error != nil {

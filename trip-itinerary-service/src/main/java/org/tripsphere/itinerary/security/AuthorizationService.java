@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.tripsphere.itinerary.exception.PermissionDeniedException;
+import org.tripsphere.itinerary.exception.UnauthenticatedException;
 import org.tripsphere.itinerary.model.ItineraryDoc;
 import org.tripsphere.itinerary.repository.ItineraryRepository;
 
@@ -27,7 +28,7 @@ public class AuthorizationService {
     public void requireAuthenticated(GrpcAuthContext authContext) {
         if (!authContext.isAuthenticated()) {
             log.warn("Unauthenticated access attempt");
-            throw PermissionDeniedException.unauthenticated();
+            throw UnauthenticatedException.authenticationRequired();
         }
     }
 

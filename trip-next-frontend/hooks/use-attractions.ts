@@ -1,4 +1,4 @@
-import type { Attraction as GrpcAttraction } from "@/lib/grpc/gen/tripsphere/attraction/attraction";
+import type { Attraction as GrpcAttraction } from "@/lib/grpc/gen/tripsphere/attraction/v1/attraction";
 import {
   findAttractionById,
   findAttractionsWithinRadius,
@@ -55,7 +55,7 @@ function convertGrpcAttractionToFrontend(
 ): Attraction {
   // Add 47.120.37.103:9000/ prefix to image URLs
   const images =
-    grpcAttraction.images?.map((url) =>
+    grpcAttraction.images?.map((url: string) =>
       url.startsWith("http")
         ? url
         : `http://47.120.37.103:9000/${url.replace(/^\//, "")}`,
@@ -68,12 +68,10 @@ function convertGrpcAttractionToFrontend(
     name: grpcAttraction.name,
     description: grpcAttraction.introduction,
     address: grpcAttraction.address || {
-      country: "",
       province: "",
       city: "",
-      county: "",
       district: "",
-      street: "",
+      detailed: "",
     },
     location: {
       lng: grpcAttraction.location?.longitude || 0,
@@ -95,7 +93,7 @@ export function useAttractions() {
       const response = await findAttractionById(id);
 
       if (!response.data) {
-        console.error("Failed to fetch attraction:", response.msg);
+        console.error("Failed to fetch attraction:", response.message);
         return null;
       }
 
@@ -113,7 +111,7 @@ export function useAttractions() {
       const response = await findAttractionsWithinRadius(request);
 
       if (!response.data) {
-        console.error("Failed to fetch attractions:", response.msg);
+        console.error("Failed to fetch attractions:", response.message);
         return [];
       }
 

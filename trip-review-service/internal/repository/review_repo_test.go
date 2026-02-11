@@ -154,7 +154,7 @@ func TestReviewRepo_GetByID(t *testing.T) {
 			id:   "review-123",
 			setupMock: func(mock sqlmock.Sqlmock) {
 				rows := sqlmock.NewRows([]string{
-					"id", "uid", "target_type", "target_id", "rating", "text", "images", "created_at", "updated_at",
+					"id", "user_id", "target_type", "target_id", "rating", "text", "images", "created_at", "updated_at",
 				}).AddRow(
 					"review-123", "user-456", "hotel", "hotel-789", 5, "Great!", `["img1.jpg"]`, now, now,
 				)
@@ -252,7 +252,7 @@ func TestReviewRepo_FindByTarget(t *testing.T) {
 			limit:      10,
 			setupMock: func(mock sqlmock.Sqlmock) {
 				rows := sqlmock.NewRows([]string{
-					"id", "uid", "target_type", "target_id", "rating", "text", "images", "created_at", "updated_at",
+					"id", "user_id", "target_type", "target_id", "rating", "text", "images", "created_at", "updated_at",
 				}).
 					AddRow("review-1", "user-1", "hotel", "hotel-123", 5, "Great!", `[]`, now, now).
 					AddRow("review-2", "user-2", "hotel", "hotel-123", 4, "Good", `[]`, now, now)
@@ -273,7 +273,7 @@ func TestReviewRepo_FindByTarget(t *testing.T) {
 			limit:      10,
 			setupMock: func(mock sqlmock.Sqlmock) {
 				rows := sqlmock.NewRows([]string{
-					"id", "uid", "target_type", "target_id", "rating", "text", "images", "created_at", "updated_at",
+					"id", "user_id", "target_type", "target_id", "rating", "text", "images", "created_at", "updated_at",
 				})
 				// Query with OFFSET
 				mock.ExpectQuery(regexp.QuoteMeta("SELECT * FROM `reviews` WHERE target_type = ? AND target_id = ? ORDER BY created_at DESC LIMIT ? OFFSET ?")).
@@ -346,7 +346,7 @@ func TestReviewRepo_FindByTargetWithCursor(t *testing.T) {
 			limit:      10,
 			setupMock: func(mock sqlmock.Sqlmock) {
 				rows := sqlmock.NewRows([]string{
-					"id", "uid", "target_type", "target_id", "rating", "text", "images", "created_at", "updated_at",
+					"id", "user_id", "target_type", "target_id", "rating", "text", "images", "created_at", "updated_at",
 				}).AddRow("review-1", "user-1", "hotel", "hotel-123", 5, "Great!", `[]`, now, now)
 
 				mock.ExpectQuery(regexp.QuoteMeta("SELECT * FROM `reviews` WHERE target_type = ? AND target_id = ? ORDER BY created_at DESC LIMIT ?")).
@@ -365,7 +365,7 @@ func TestReviewRepo_FindByTargetWithCursor(t *testing.T) {
 			limit:      10,
 			setupMock: func(mock sqlmock.Sqlmock) {
 				rows := sqlmock.NewRows([]string{
-					"id", "uid", "target_type", "target_id", "rating", "text", "images", "created_at", "updated_at",
+					"id", "user_id", "target_type", "target_id", "rating", "text", "images", "created_at", "updated_at",
 				}).AddRow("review-2", "user-2", "hotel", "hotel-123", 4, "Good", `[]`, now.Add(-time.Hour), now)
 
 				// GORM wraps the first Where condition in parentheses
@@ -396,7 +396,7 @@ func TestReviewRepo_FindByTargetWithCursor(t *testing.T) {
 			limit:      10,
 			setupMock: func(mock sqlmock.Sqlmock) {
 				rows := sqlmock.NewRows([]string{
-					"id", "uid", "target_type", "target_id", "rating", "text", "images", "created_at", "updated_at",
+					"id", "user_id", "target_type", "target_id", "rating", "text", "images", "created_at", "updated_at",
 				})
 				mock.ExpectQuery(regexp.QuoteMeta("SELECT * FROM `reviews`")).
 					WillReturnRows(rows)

@@ -122,7 +122,7 @@ export const useAuth = create<AuthState>()(
           const response = await loginApi(credentials);
 
           if (response.code !== "Success") {
-            set({ error: response.msg, isLoading: false });
+            set({ error: response.message, isLoading: false });
             return false;
           }
 
@@ -159,7 +159,7 @@ export const useAuth = create<AuthState>()(
           const response = await registerApi(data);
 
           if (response.code !== "Success") {
-            set({ error: response.msg, isLoading: false });
+            set({ error: response.message, isLoading: false });
             return false;
           }
 

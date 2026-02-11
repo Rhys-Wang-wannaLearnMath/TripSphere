@@ -1,4 +1,4 @@
-package org.tripsphere.itinerary.exception;
+package org.tripsphere.poi.exception;
 
 import io.grpc.Status;
 
@@ -9,7 +9,7 @@ public class PermissionDeniedException extends BusinessException {
         super(message, Status.Code.PERMISSION_DENIED);
     }
 
-    public static PermissionDeniedException notOwner() {
-        return new PermissionDeniedException("You don't have permission to access this resource");
+    public static PermissionDeniedException adminRequired() {
+        return new PermissionDeniedException("Admin privileges required");
     }
 }

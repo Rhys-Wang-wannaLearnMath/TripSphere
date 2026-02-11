@@ -10,7 +10,7 @@ import (
 
 type ReviewModel struct {
 	ID         string `gorm:"primaryKey;column:id;type:varchar(64)"`
-	UserID     string `gorm:"column:uid;type:varchar(64);not null"`
+	UserID     string `gorm:"column:user_id;type:varchar(64);not null"`
 	TargetType string `gorm:"column:target_type;type:varchar(20);not null"`
 	TargetID   string `gorm:"column:target_id;type:varchar(64);not null"`
 	Rating     int64  `gorm:"column:rating;type:tinyint;not null"`

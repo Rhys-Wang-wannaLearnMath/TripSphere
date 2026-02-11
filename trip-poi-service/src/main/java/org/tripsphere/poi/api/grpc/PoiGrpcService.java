@@ -8,6 +8,9 @@ import lombok.RequiredArgsConstructor;
 import net.devh.boot.grpc.server.service.GrpcService;
 import org.tripsphere.poi.exception.InvalidArgumentException;
 import org.tripsphere.poi.exception.NotFoundException;
+import org.tripsphere.poi.exception.PermissionDeniedException;
+import org.tripsphere.poi.exception.UnauthenticatedException;
+import org.tripsphere.poi.security.GrpcAuthContext;
 import org.tripsphere.poi.service.PoiService;
 import org.tripsphere.poi.v1.BatchCreatePoisRequest;
 import org.tripsphere.poi.v1.BatchCreatePoisResponse;
@@ -108,6 +111,9 @@ public class PoiGrpcService extends PoiServiceImplBase {
     @Override
     public void createPoi(
             CreatePoiRequest request, StreamObserver<CreatePoiResponse> responseObserver) {
+        // Admin only
+        requireAdmin();
+
         if (!request.hasPoi()) {
             throw InvalidArgumentException.required("poi");
         }
@@ -122,6 +128,9 @@ public class PoiGrpcService extends PoiServiceImplBase {
     public void batchCreatePois(
             BatchCreatePoisRequest request,
             StreamObserver<BatchCreatePoisResponse> responseObserver) {
+        // Admin only
+        requireAdmin();
+
         List<CreatePoiRequest> requests = request.getRequestsList();
         if (requests.isEmpty()) {
             throw new InvalidArgumentException("Request list for batch creation is empty");
@@ -149,5 +158,18 @@ public class PoiGrpcService extends PoiServiceImplBase {
             return DEFAULT_LIMIT;
         }
         return Math.min(limit, MAX_LIMIT);
+    }
+
+    /** Require admin privileges for the current request. */
+    private void requireAdmin() {
+        GrpcAuthContext authContext = GrpcAuthContext.current();
+
+        if (!authContext.isAuthenticated()) {
+            throw UnauthenticatedException.authenticationRequired();
+        }
+
+        if (!authContext.isAdmin()) {
+            throw PermissionDeniedException.adminRequired();
+        }
     }
 }

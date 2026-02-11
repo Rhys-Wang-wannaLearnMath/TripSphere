@@ -1,4 +1,4 @@
-package org.tripsphere.itinerary.security;
+package org.tripsphere.poi.security;
 
 import io.grpc.Context;
 import io.grpc.Metadata;
@@ -39,12 +39,7 @@ public class GrpcAuthContext {
     private final List<String> roles;
     private final String token;
 
-    /**
-     * Extract authentication context from gRPC metadata.
-     *
-     * @param metadata the gRPC metadata
-     * @return the auth context, or an anonymous context if metadata is missing
-     */
+    /** Extract authentication context from gRPC metadata. */
     public static GrpcAuthContext fromMetadata(Metadata metadata) {
         if (metadata == null) {
             return anonymous();
