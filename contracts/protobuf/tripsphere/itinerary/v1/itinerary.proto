@@ -3,10 +3,10 @@ syntax = "proto3";
 package tripsphere.itinerary.v1;
 
 import "google/protobuf/struct.proto";
-import "google/protobuf/timestamp.proto";
 import "tripsphere/attraction/v1/attraction.proto";
 import "tripsphere/common/v1/date.proto";
 import "tripsphere/common/v1/money.proto";
+import "tripsphere/common/v1/timeofday.proto";
 import "tripsphere/hotel/v1/hotel.proto";
 import "tripsphere/poi/v1/poi.proto";
 
@@ -47,8 +47,8 @@ message Activity {
   ActivityKind kind = 2;
   string title = 3;
   string description = 4;
-  google.protobuf.Timestamp start_time = 5;
-  google.protobuf.Timestamp end_time = 6;
+  tripsphere.common.v1.TimeOfDay start_time = 5;
+  tripsphere.common.v1.TimeOfDay end_time = 6;
   tripsphere.common.v1.Money estimated_cost = 7;
   oneof resource {
     tripsphere.attraction.v1.Attraction attraction = 8;
@@ -101,15 +101,17 @@ message ArchiveItineraryResponse {}
 
 message ListUserItinerariesRequest {
   string user_id = 1;
-  int32 page_number = 2;
-  int32 page_size = 3;
+  int32 page_size = 2;
+  // A page token, received from a previous `ListUserItineraries` call.
+  // Provide this to retrieve the subsequent page.
+  string page_token = 3;
 }
 
 message ListUserItinerariesResponse {
   repeated Itinerary itineraries = 1;
-  int32 total_count = 2;
-  int32 page_number = 3;
-  int32 page_size = 4;
+  // A token, which can be sent as `page_token` to retrieve the next page.
+  // If this field is omitted, there are no subsequent pages.
+  string next_page_token = 2;
 }
 
 message AddDayPlanRequest {
@@ -143,7 +145,7 @@ message AddActivityRequest {
   Activity activity = 3;
   // The index of the activity to be inserted before.
   // If not set or out of range, the activity will be added to the end of the day plan.
-  uint32 insert_index = 4;
+  int32 insert_index = 4;
 }
 
 message AddActivityResponse {

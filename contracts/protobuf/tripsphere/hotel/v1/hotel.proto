@@ -9,72 +9,31 @@ option java_multiple_files = true;
 option java_package = "org.tripsphere.hotel.v1";
 
 service HotelService {
-  rpc FindHotelById(FindHotelByIdRequest) returns (FindHotelByIdResponse);
+  rpc GetHotelById(GetHotelByIdRequest) returns (GetHotelByIdResponse);
 
   rpc DeleteHotel(DeleteHotelRequest) returns (DeleteHotelResponse);
-
-  // Find hotels located at the specified location and within the specified distance range
-  // and list them in order from near to far
-  rpc FindHotelWithinRadius(FindHotelWithinRadiusRequest) returns (FindHotelWithinRadiusResponse);
-
-  // Find hotels located at the specified location and within the specified distance range
-  rpc FindHotelsWithinCircle(FindHotelsWithinCircleRequest) returns (FindHotelsWithinCircleResponse);
-}
-
-message Room {
-  string name = 1;
-  int32 total_number = 2;
-  int32 remaining_number = 3;
-  double bed_width = 4;
-  int32 bed_number = 5;
-  double min_area = 6;
-  double max_area = 7;
-  int32 people_number = 8;
-  repeated string tags = 9;
 }
 
 message Hotel {
   string id = 1;
   string name = 2;
-  tripsphere.common.v1.Address address = 3;
-  string introduction = 4;
-  repeated string tags = 5;
-  repeated Room rooms = 6;
-  tripsphere.common.v1.GeoPoint location = 7;
+  string poi_id = 3;
+  tripsphere.common.v1.Address address = 4;
+  tripsphere.common.v1.GeoPoint location = 5;
+  string introduction = 6;
+  repeated string tags = 7;
 }
 
-message FindHotelByIdRequest {
+message GetHotelByIdRequest {
   string id = 1;
 }
 
-message FindHotelByIdResponse {
+message GetHotelByIdResponse {
   Hotel hotel = 1;
 }
 
 message DeleteHotelRequest {
-  string id = 1; // Hotel ID
+  string id = 1;
 }
 
 message DeleteHotelResponse {}
-
-message FindHotelWithinRadiusRequest {
-  tripsphere.common.v1.GeoPoint location = 1;
-  double radius_km = 2;
-  string name = 3;
-  repeated string tags = 4;
-}
-
-message FindHotelWithinRadiusResponse {
-  repeated Hotel content = 1;
-}
-
-message FindHotelsWithinCircleRequest {
-  tripsphere.common.v1.GeoPoint location = 1;
-  double radius_km = 2;
-  string name = 3;
-  repeated string tags = 4;
-}
-
-message FindHotelsWithinCircleResponse {
-  repeated Hotel content = 1;
-}

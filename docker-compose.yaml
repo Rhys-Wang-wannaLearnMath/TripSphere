@@ -151,21 +151,13 @@ services:
     image: tripsphere/trip-itinerary-service:latest
     container_name: trip-itinerary-service
     ports:
+      - "24219:24219"  # HTTP
       - "50052:50052"  # gRPC
-    environment:
-      - NACOS_SERVER_ADDRESS=${NACOS_SERVER_ADDRESS:-nacos:8848}
-      - MONGO_URI=${MONGO_URI:-mongodb://root:fudanse@mongodb:27017}
     depends_on:
       nacos:
         condition: service_healthy
       mongodb:
         condition: service_healthy
-    healthcheck:
-      test: ["CMD", "nc", "-z", "localhost", "50052"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-      start_period: 40s
     restart: unless-stopped
 
   # Journey Assistant
@@ -225,6 +217,23 @@ services:
       - "50055:50055"  # gRPC
     depends_on:
       nacos:
+        condition: service_healthy
+    restart: unless-stopped
+
+  # POI Service
+  trip-poi-service:
+    build:
+      context: trip-poi-service
+      dockerfile: Dockerfile
+    image: tripsphere/trip-poi-service:latest
+    container_name: trip-poi-service
+    ports:
+      - "24218:24218"  # HTTP
+      - "50058:50058"  # gRPC
+    depends_on:
+      nacos:
+        condition: service_healthy
+      mongodb:
         condition: service_healthy
     restart: unless-stopped
 
